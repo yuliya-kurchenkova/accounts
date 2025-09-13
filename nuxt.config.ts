@@ -15,7 +15,8 @@ export default defineNuxtConfig({
       del: "heroicons:archive-box-x-mark-solid",
       plus: "heroicons:plus-circle",
       close: "heroicons:lock-closed-16-solid",
-      open: "heroicons:lock-open-16-solid"
+      open: "heroicons:lock-open-16-solid",
+      question: "heroicons:question-mark-circle-solid"
     },
   },
 });

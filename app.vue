@@ -3,6 +3,7 @@
 const login = useLoginFieldStore();
 const password = usePasswordFieldStore();
 const selectType = useSelectTypeStore();
+const labels = useLabelFieldStore();
 const options = [
   { label: "LDAP", value: "LDAP" },
   { label: "Локальная", value: "Локальная" },
@@ -23,24 +24,42 @@ const options = [
           class="h-8 w-8 text-sky-400 transition-transform group-hover:scale-110 group-active:scale-95" />
       </div>
     </div>
-    <UiSelectBase
-      v-model="selectType.value"
-      :options="options"
-      label="Тип записи"
-      placeholder="Выберите тип"
-      :error-message="selectType.touched && !selectType.isValid ? selectType.error : ''"
-      @change="selectType.onChange"
+    <UiHint
+      class="mx-auto w-max p-4 rounded-lg"
+      icon="question"
+      message="Для указания нескольких меток используйте разделитель ;"
     />
-    <UiInputBase 
-      v-model="login.value" 
-      :error-message="login.touched && !login.isValid ? login.error : ''"
-      @blur="login.onBlur" />
-    <UiInputPassword 
-      v-if="selectType.showPassword"
-      v-model="password.value"
-      :error-message="password.touched && !password.isValid ? password.error : ''" 
-      @blur="password.onBlur" 
-      label="Пароль"
-      placeholder="Введите пароль" />
+    <div class="flex items-center justify-center gap-[54px]">
+      <UiLabelBase
+        v-model="labels.value"
+        :error-message="labels.touched && !labels.isValid ? labels.error : ''"
+        @blur="labels.onBlurCommit()"
+        label="Метки"
+        placeholder="Введите метки"
+        :multiline="true"
+        :rows="2"
+      />
+      <UiSelectBase
+        v-model="selectType.value"
+        :options="options"
+        label="Тип записи"
+        placeholder="Выберите тип"
+        :error-message="selectType.touched && !selectType.isValid ? selectType.error : ''"
+        @change="selectType.onChange"
+      />
+      <UiInputBase
+        label="Логин"
+        placeholder="Введите логин"
+        v-model="login.value" 
+        :error-message="login.touched && !login.isValid ? login.error : ''"
+        @blur="login.onBlur" />
+      <UiInputPassword 
+        v-if="selectType.showPassword"
+        v-model="password.value"
+        :error-message="password.touched && !password.isValid ? password.error : ''" 
+        @blur="password.onBlur" 
+        label="Пароль"
+        placeholder="Введите пароль" />
+    </div>
   </main>
 </template>
