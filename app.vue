@@ -1,8 +1,6 @@
 <script setup lang="ts">
 
-const login = useLoginFieldStore();
-const password = usePasswordFieldStore();
-const selectType = useSelectTypeStore();
+const accountsStore = useAccountsStore();
 const options = [
   { label: "LDAP", value: "LDAP" },
   { label: "Локальная", value: "Локальная" },
@@ -18,29 +16,54 @@ const options = [
             Учётные записи
           </span>
         </h1>
-        <Icon 
-          name="plus"
-          class="h-8 w-8 text-sky-400 transition-transform group-hover:scale-110 group-active:scale-95" />
+        <button @click="accountsStore.addEmpty">
+          <Icon name="plus" class="h-8 w-8 text-sky-400 hover:scale-110 active:scale-95 transition-transform" />
+        </button>
       </div>
     </div>
-    <UiSelectBase
-      v-model="selectType.value"
-      :options="options"
-      label="Тип записи"
-      placeholder="Выберите тип"
-      :error-message="selectType.touched && !selectType.isValid ? selectType.error : ''"
-      @change="selectType.onChange"
-    />
-    <UiInputBase 
-      v-model="login.value" 
-      :error-message="login.touched && !login.isValid ? login.error : ''"
-      @blur="login.onBlur" />
-    <UiInputPassword 
-      v-if="selectType.showPassword"
-      v-model="password.value"
-      :error-message="password.touched && !password.isValid ? password.error : ''" 
-      @blur="password.onBlur" 
-      label="Пароль"
-      placeholder="Введите пароль" />
+
+    <UiHint class="mx-auto w-max p-4 rounded-lg" icon="question"
+            message="Для указания нескольких меток используйте разделитель ;" />
+
+    <div class="mt-6 flex flex-col gap-6">
+      <div v-for="acc in accountsStore.accounts" :key="acc.id"
+           class="mx-auto flex items-start gap-6 border-b border-gray-700/30 pb-4">
+        <UiLabelBase
+          v-model="acc.labelsRaw"
+          label="Метки"
+          placeholder="Введите метки"
+          :multiline="true" :rows="2"
+          :error-message="accountsStore.errorsById.get(acc.id)?.labels || ''"
+          @blur="accountsStore.commit(acc.id, 'labels')"
+        />
+        <UiSelectBase
+          v-model="acc.type"
+          :options="options"
+          label="Тип записи"
+          placeholder="Выберите тип"
+          :error-message="accountsStore.errorsById.get(acc.id)?.type || ''"
+          @change="(v:string)=>{ accountsStore.setField(acc.id,'type', v as any); accountsStore.commit(acc.id,'type'); }"
+        />
+        <UiInputBase
+          v-model="acc.login"
+          label="Логин"
+          placeholder="Введите логин"
+          :error-message="accountsStore.errorsById.get(acc.id)?.login || ''"
+          @blur="accountsStore.commit(acc.id, 'login')"
+        />
+        <UiInputPassword
+          v-if="acc.type === 'Локальная'"
+           v-model="acc.password"
+          label="Пароль"
+          placeholder="Введите пароль"
+          :error-message="accountsStore.errorsById.get(acc.id)?.password || ''"
+          @blur="accountsStore.commit(acc.id, 'password')"
+        />
+        <button type="button" @click="accountsStore.removeAccount(acc.id)"
+                class="mt-6 rounded p-2 hover:bg-red-500/20">
+          <Icon name="del" class="h-6 w-6 text-red-400" />
+        </button>
+      </div>
+    </div>
   </main>
 </template>
