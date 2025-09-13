@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 const login = useLoginFieldStore();
+const password = usePasswordFieldStore();
 </script>
 
 <template>
@@ -12,12 +13,20 @@ const login = useLoginFieldStore();
             Учётные записи
           </span>
         </h1>
-        <Icon name="plus" class="h-8 w-8 text-sky-400 transition-transform group-hover:scale-110 group-active:scale-95" />
+        <Icon 
+          name="plus"
+          class="h-8 w-8 text-sky-400 transition-transform group-hover:scale-110 group-active:scale-95" />
       </div>
     </div>
     <UiInputBase 
       v-model="login.value" 
-      :error-message="login.touched && !login.isValid ? login.error : ''" 
-      @blur="login.onBlur"/>
+      :error-message="login.touched && !login.isValid ? login.error : ''"
+      @blur="login.onBlur" />
+    <UiInputPassword 
+      v-model="password.value"
+      :error-message="password.touched && !password.isValid ? password.error : ''" 
+      @blur="password.onBlur" 
+      label="Пароль"
+      placeholder="Введите пароль" />
   </main>
 </template>
