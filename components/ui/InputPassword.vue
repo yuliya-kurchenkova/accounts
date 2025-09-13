@@ -31,9 +31,15 @@ const type = computed(() => (show.value ? "text" : "password"));
 function updateInputValue(e: Event) {
   emit("update:modelValue", (e.target as HTMLInputElement).value);
 }
-function onFocus() { isFocused.value = true; emit("focus"); }
-function onBlur()  { isFocused.value = false; emit("blur"); }
-function toggle()  { show.value = !show.value; }
+function onFocus() { 
+  isFocused.value = true; emit("focus"); 
+}
+function onBlur()  { 
+  isFocused.value = false; emit("blur"); 
+}
+function toggle()  { 
+  show.value = !show.value; 
+}
 </script>
 
 <template>
@@ -46,7 +52,7 @@ function toggle()  { show.value = !show.value; }
       <input
         :id="label"
         :type="type"
-        :value="modelValue ?? ''"
+        :value="modelValue"
         :placeholder="placeholder"
         v-bind="$attrs"
         @input="updateInputValue"
