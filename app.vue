@@ -2,6 +2,11 @@
 
 const login = useLoginFieldStore();
 const password = usePasswordFieldStore();
+const selectType = useSelectTypeStore();
+const options = [
+  { label: "LDAP", value: "LDAP" },
+  { label: "Локальная", value: "Локальная" },
+];
 </script>
 
 <template>
@@ -18,11 +23,20 @@ const password = usePasswordFieldStore();
           class="h-8 w-8 text-sky-400 transition-transform group-hover:scale-110 group-active:scale-95" />
       </div>
     </div>
+    <UiSelectBase
+      v-model="selectType.value"
+      :options="options"
+      label="Тип записи"
+      placeholder="Выберите тип"
+      :error-message="selectType.touched && !selectType.isValid ? selectType.error : ''"
+      @change="selectType.onChange"
+    />
     <UiInputBase 
       v-model="login.value" 
       :error-message="login.touched && !login.isValid ? login.error : ''"
       @blur="login.onBlur" />
     <UiInputPassword 
+      v-if="selectType.showPassword"
       v-model="password.value"
       :error-message="password.touched && !password.isValid ? password.error : ''" 
       @blur="password.onBlur" 
